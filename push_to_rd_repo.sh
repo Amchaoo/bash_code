@@ -1,7 +1,8 @@
 #!/bin/bash
 
-RD_REPO="RD_REPO"     # 本地的目的仓库地址
-RELATIVE_DIST="./uL"  # 相对working directory的代码地址
+FE_DIST="./dest/prod/"  # 前端文件打包地址, 默认dirname ${0} 为前端项目根目录
+RD_DIST="/Users/anchao01/code/approval/src/main/resources/static/"  #要拷贝到的地址
+NEED_RM_DIRS=("/Users/anchao01/code/approval/src/main/resources/static/dist/") #需要在拷贝前删除的, 传入一个数组
 
 if [ -z "$1" ]
 then
@@ -18,12 +19,15 @@ feBuild() {
 
 clearRdRepoDist() {
     echo "cleaning rd repo..."
-    rm -rf "$RD_REPO"
+    for dir in ${NEED_RM_DIRS[@]}
+    do
+        rm -rf ${dir}
+    done
     echo "cleaned"
 }
 
 cloneSource() {
-    cp -R "$RELATIVE_DIST" "$RD_REPO"
+    cp -R "$FE_DIST" "$RD_DIST"
     echo "copy end"
 }
 
@@ -34,14 +38,13 @@ checkBranch() {
 }
 
 pushSource() {
-    cd "$RD_REPO"
+    cd "$RD_DIST"
     git pull
     branch=$(git status | grep "On branch" | awk '{print $3}')
     echo -n "you are in branch $branch, are you sure continue? (y/n)>"
     read result
     if [ "$result" = "y" ]
-    then 
-        echo 'y'
+    then
         git add .
         git commit -m "$COMMIT_MSG"
         git push
