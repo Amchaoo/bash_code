@@ -3,8 +3,8 @@
 # 在提交仓库里加上前端commit hash便于追踪记录 
 # commit-msg hook, 加载部署仓库里
 
-FE_REPO #需要配置下前端仓库地址
-HASH="/Users/anchao01/code/fe_repo"
+FE_REPO="/Users/anchao01/code/fe_repo" #需要配置下前端仓库地址
+HASH=""
 
 gen_hash() {
     cd ${FE_REPO}
