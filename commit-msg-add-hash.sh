@@ -8,12 +8,12 @@ HASH="/Users/anchao01/code/fe_repo"
 
 gen_hash() {
     cd ${FE_REPO}
-	HASH=$(git log | grep commit | head -1 | awk '{print $2}')
-	cd - >/dev/null
+    HASH=$(git log | grep commit | head -1 | awk '{print $2}')
+    cd - >/dev/null
 }
 
 add_fe_repo_hash() {
-	SUFFIX="\nhash: $HASH"
+    SUFFIX="\nhash: $HASH"
     echo $(cat $1) ${SUFFIX} > $1
 }
 
