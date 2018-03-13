@@ -1,8 +1,9 @@
 #!/bin/bash
+set -e
 
-FE_DIST="./dest/prod/"  # 前端文件打包地址, 默认dirname ${0} 为前端项目根目录
-RD_DIST="/Users/anchao01/code/approval/src/main/resources/static/"  #要拷贝到的地址
-NEED_RM_DIRS=("/Users/anchao01/code/approval/src/main/resources/static/dist/") #需要在拷贝前删除的, 传入一个数组
+FE_DIST="/Users/anchao01/code/dest/prod/"  # 前端文件打包地址, 默认dirname ${0} 为前端项目根目录
+RD_DIST="/Users/anchao01/code/src/main/resources/static/"  #要拷贝到的地址
+NEED_RM_DIRS=("/Users/anchao01/code/src/main/resources/static/dist/") #需要在拷贝前删除的, 传入一个数组
 
 if [ -z "$1" ]
 then
@@ -37,6 +38,14 @@ checkBranch() {
     git checkout "$branch">/dev/null
 }
 
+gitPush() {
+    clearRdRepoDist
+    cloneSource
+    git add .
+    git commit -m "$COMMIT_MSG"
+    git push
+}
+
 pushSource() {
     cd "$RD_DIST"
     git pull
@@ -45,22 +54,16 @@ pushSource() {
     read result
     if [ "$result" = "y" ]
     then
-        git add .
-        git commit -m "$COMMIT_MSG"
-        git push
+        gitPush
     else
         until checkBranch; do
             echo -n 'error, please try again!'
             echo
         done
-        git add .
-        git commit -m "$COMMIT_MSG"
-        git push
+        gitPush
     fi
     echo "push to origin repo success"
 }
 
 feBuild
-clearRdRepoDist
-cloneSource
 pushSource
