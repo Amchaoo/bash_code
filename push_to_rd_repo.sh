@@ -4,18 +4,33 @@ set -e
 FE_DIST="/Users/anchao01/code/dest/prod/"  # 前端文件打包地址, 默认dirname ${0} 为前端项目根目录
 RD_DIST="/Users/anchao01/code/src/main/resources/static/"  #要拷贝到的地址
 NEED_RM_DIRS=("/Users/anchao01/code/src/main/resources/static/dist/") #需要在拷贝前删除的, 传入一个数组
+WILL_BUILD=true   # 是否进行前端构建, 默认为ture, 传入-c参数, 则不构建, 直接诶cp文件然后提交后端仓库  
+COMMIT_MSG="fix bug"
 
-if [ -z "$1" ]
-then
-    COMMIT_MSG="fix bug"
-else
-    COMMIT_MSG="$1"
-fi
+while getopts ":m:ch" opt
+do
+    case $opt in
+        m)
+        COMMIT_MSG=$OPTARG;;
+        c)
+        WILL_BUILD=false;;
+        h)
+        echo "Ussage:"
+        echo "  -h 显示帮助"
+        echo "  -c 不执行前端构建"
+        echo "  -m xxxmsg 提交的commit message"
+        ;;
+        ?)
+    esac
+done
 
 feBuild() {
-    echo "fe build start"
-    matriks2 dest
-    echo "fe build end"
+    if $WILL_BUILD
+    then
+        echo "[pwd]: $(pwd)"
+        echo "fe build start"
+        matriks2 dest
+    fi
 }
 
 clearRdRepoDist() {
