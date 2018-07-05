@@ -19,6 +19,7 @@ do
         echo "  -h 显示帮助"
         echo "  -c 不执行前端构建"
         echo "  -m xxxmsg 提交的commit message"
+        exit 1
         ;;
         ?)
     esac
